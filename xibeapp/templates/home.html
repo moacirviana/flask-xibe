@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-  <h1>Home</h1>
+  <h1>Comandas</h1>
   {% for venda in vendas.items %}
     <article class="media content-section">
       
@@ -10,10 +10,50 @@
             <small class="text-muted">{{ venda.datacad.strftime('%d/%m/%Y') }}</small>
           </div>
           <h2><a class="article-title" href="{{ url_for('posts.post', post_id=venda.id) }}">{{ venda.valor }}</a></h2>
-          <p class="article-content">{{ venda.total }}</p>
+          
+          <div class="accordion accordion-flush" id="accordion{{ venda.id }}">
+        
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="flush-heading{{ venda.id }}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ venda.id }}" aria-expanded="false" aria-controls="flush-collapse2">
+                  Itens da comanda #{{ venda.id }}
+                </button>
+              </h2>
+              <div id="flush-collapse{{ venda.id }}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordion{{venda.id}}">
+                <div class="accordion-body">
+                  
+                    
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Produto</th>
+                          <th scope="col">qtd</th>
+                          <th scope="col">Valor</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for item in venda.itens %}
+                        <tr>
+                          <th scope="row">1</th>
+                          <td>{{item.id_produto}}</td>
+                          <td>{{item.qtd}}</td>
+                          <td>{{item.valor}}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+
+                </div>
+              </div>
+            </div>        
+          </div>
+
+          <p class="article-content">Total R$ {{'%0.2f'|format(venda.total|float)}}</p>
         </div>
       </article>
   {% endfor %}
+
 
   {% for page_num in vendas.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=5) %}
     {% if page_num %}
